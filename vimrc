@@ -1,0 +1,310 @@
+"
+"
+"
+"
+" ___                   __     ___
+"|_ _|_   ____ _ _ __   \ \   / (_)_ __ ___  _ __ ___
+" | |\ \ / / _` | '_ \   \ \ / /| | '_ ` _ \| '__/ __|
+" | | \ V / (_| | | | |   \ V / | | | | | | | | | (__
+"|___| \_/ \__,_|_| |_|    \_/  |_|_| |_| |_|_|  \___|
+
+
+
+
+
+
+" === Auto load for first time usels-------------{{{
+" " ===
+"if empty(glob('~/.vim/autoload/plug.vim'))
+"  silent !curl -fLo ~/.vim/autoload/plug.vim --create-dirs
+"    \ https://raw.githubusercontent.com/junegunn/vim-plug/master/plug.vim
+"  autocmd VimEnter * PlugInstall --sync | source $MYVIMRC
+"endif
+"}}}
+
+
+
+
+"Vimscript and snippets file settings---------------------{{{
+augroup filetype_vim
+    autocmd!
+    autocmd FileType vim setlocal foldmethod=marker
+    autocmd FileType snippets setlocal foldmethod=marker
+augroup END
+set foldlevelstart=0
+"}}}
+
+
+
+
+" ____            _
+"| __ )  __ _ ___(_) ___
+"|  _ \ / _` / __| |/ __|
+"| |_) | (_| \__ \ | (__
+"|____/ \__,_|___/_|\___|
+"BasicSetting--------------------------------------{{{
+" ===
+" === System
+" ===set nocompatible
+filetype on
+filetype indent on
+filetype plugin on
+filetype plugin indent on
+set mouse=a
+set encoding=utf-8
+set gfn=GoMonoForPowerline:h14
+let &t_ut=''
+
+" Prevent auto line split
+set wrap
+set tw=0
+set transparency=10
+
+set indentexpr=
+" Better backspace
+set backspace=indent,eol,start
+set pastetoggle=<F2>
+
+let &t_SI = "\<Esc>]50;CursorShape=1\x7"
+let &t_SR = "\<Esc>]50;CursorShape=2\x7"
+let &t_EI = "\<Esc>]50;CursorShape=0\x7"
+" ===
+" === Editor behavior
+" ===
+set expandtab
+set tabstop=2
+set shiftwidth=2
+set softtabstop=2
+set list
+set listchars=tab:▸\ ,trail:▫
+set scrolloff=8
+
+
+" ===
+" === Restore Cursor Position
+" ===
+au BufReadPost * if line("'\"") > 1 && line("'\"") <= line("$") | exe "normal! g'\"" | endif
+
+
+" ===
+" === Status/command bar
+" ===
+set laststatus=2
+set autochdir
+set showcmd
+set formatoptions-=tc
+
+let mapleader=" "
+syntax on
+set number
+set relativenumber
+set cursorline
+set wildmenu
+"}}}
+
+
+
+
+"____                      _
+"/ ___|  ___  __ _ _ __ ___| |__
+"\___ \ / _ \/ _` | '__/ __| '_ \
+" ___) |  __/ (_| | | | (__| | | |
+"|____/ \___|\__,_|_|  \___|_| |_|
+"SearchSettings-----------{{{
+set hlsearch
+exec "nohlsearch"
+set incsearch
+set ignorecase
+set smartcase
+noremap n nzz
+noremap N Nzz
+noremap <LEADER><CR> :nohlsearch<CR>
+"}}}
+
+
+
+
+" _  __            __  __
+"| |/ /___ _   _  |  \/  | __ _ _ __
+"| ' // _ \ | | | | |\/| |/ _` | '_ \
+"| . \  __/ |_| | | |  | | (_| | |_) |
+"|_|\_\___|\__, | |_|  |_|\__,_| .__/
+"          |___/               |_|
+"KeyMaping------------------------{{{
+inoremap jk <esc>
+inoremap <esc> <nop>
+noremap s <nop>
+noremap S :w<CR>
+noremap Q :q<CR>
+noremap R :source $MYVIMRC<CR>
+
+noremap sl :set splitright<CR>:vsplit<CR>
+noremap sh :set nosplitright<CR>:vsplit<CR>
+noremap sk :set nosplitbelow<CR>:split<CR>
+noremap sj :set splitbelow<CR>:split<CR>
+
+
+noremap <LEADER>l <C-w>l
+noremap <LEADER>h <C-w>h
+noremap <LEADER>j <C-w>j
+noremap <LEADER>k <C-w>k
+
+noremap sv <C-w>t<C-w>H
+noremap sf <C-w>t<C-w>K
+
+noremap <up> :res +5<CR>
+noremap <down> :res -5<CR>
+noremap <left> :vertical resize -5<CR>
+noremap <right> :vertical resize +5<CR>
+
+noremap tk :tabe<CR>
+noremap th :-tabnext<CR>
+noremap tl :+tabnext<CR>
+
+"编辑vimrc文件
+nnoremap <leader>ev :vsplit $MYVIMRC<cr>
+
+"引号
+nnoremap <leader>" viw<esc>a"<esc>hbi"<esc>lel
+nnoremap <leader>' viw<esc>a'<esc>hbi'<esc>lel
+
+
+nnoremap <c-u> viwU<esc>
+
+inoremap <c-k> <esc>d$a
+inoremap <c-a> <esc>I
+inoremap <c-e> <esc>A
+"}}}
+
+
+
+
+" ____  _
+"|  _ \| |_   _  __ _
+"| |_) | | | | |/ _` |
+"|  __/| | |_| | (_| |
+"|_|   |_|\__,_|\__, |
+"               |___/
+"Plug----------------------------------------------{{{
+call plug#begin('~/.vim/plugged')
+" 状态条
+Plug 'vim-airline/vim-airline'
+Plug 'vim-airline/vim-airline-themes'
+let g:airline_theme='base16'
+let g:airline_left_sep = ''
+let g:aiuirline_left_alt_sep = ''
+let g:airline_right_sep = ''
+let g:airline_right_alt_sep = ''
+let g:airline_symbols = {}
+let g:airline_symbols.branch = ''
+let g:airline_symbols.readonly = ''
+let g:airline_symbols.linenr = '☰'
+let g:airline_symbols.maxlinenr = ''
+let g:airline_symbols.dirty='⚡'
+let g:airline_extensions = ['tabline']
+let g:airline#extensions#tabline#left_sep = ' '
+let g:airline#extensions#tabline#left_alt_sep = '|'
+let g:airline_detect_paste=1
+
+" 主题
+Plug 'connorholyday/vim-snazzy'
+
+
+" File navigation
+Plug 'scrooloose/nerdtree', { 'on': 'NERDTreeToggle' }
+Plug 'Xuyuanp/nerdtree-git-plugin'
+Plug 'ctrlpvim/ctrlp.vim', { 'on': 'CtrlP' }
+
+" Snips
+Plug 'sirver/ultisnips'
+let g:UltiSnipsExpandTrigger = '<tab>'
+let g:UltiSnipsJumpForwardTrigger = '<tab>'
+let g:UltiSnipsJumpBackwardTrigger = '<s-tab>'
+let g:UltiSnipsSnippetDirectories=["UltiSnips", "MySnippets"]
+
+
+" _          _
+"| |    __ _| |_ _____  __
+"| |   / _` | __/ _ \ \/ /
+"| |__| (_| | ||  __/>  <
+"|_____\__,_|\__\___/_/\_\
+Plug 'lervag/vimtex'
+" -----------------------------------------------------------------------------
+"  VIMTEX OPTIONS
+"  ----------------------------------------------------------------------------
+if has('unix')
+    if has('mac')
+        let g:vimtex_view_method = "skim"
+        let g:vimtex_view_general_viewer
+                \ = '/Applications/Skim.app/Contents/SharedSupport/displayline'
+        let g:vimtex_view_general_options = '-r @line @pdf @tex'
+
+        " This adds a callback hook that updates Skim after compilation
+        let g:vimtex_compiler_callback_hooks = ['UpdateSkim']
+        function! UpdateSkim(status)
+            if !a:status | return | endif
+
+            let l:out = b:vimtex.out()
+            let l:tex = expand('%:p')
+            let l:cmd = [g:vimtex_view_general_viewer, '-r']
+            if !empty(system('pgrep Skim'))
+            call extend(l:cmd, ['-g'])
+            endif
+            if has('nvim')
+            call jobstart(l:cmd + [line('.'), l:out, l:tex])
+            elseif has('job')
+            call job_start(l:cmd + [line('.'), l:out, l:tex])
+            else
+            call system(join(l:cmd + [line('.'), shellescape(l:out), shellescape(l:tex)], ' '))
+            endif
+        endfunction
+    else
+        let g:latex_view_general_viewer = "zathura"
+        let g:vimtex_view_method = "zathura"
+    endif
+elseif has('win32')
+
+endif
+
+let g:tex_flavor = "latex"
+let g:vimtex_quickfix_open_on_warning = 0
+let g:vimtex_quickfix_mode = 2
+if has('nvim')
+    let g:vimtex_compiler_progname = 'nvr'
+endif
+
+" One of the neosnippet plugins will conceal symbols in LaTeX which is
+" confusing
+let g:tex_conceal = ""
+
+" Can hide specifc warning messages from the quickfix window
+" Quickfix with Neovim is broken or something
+" https://github.com/lervag/vimtex/issues/773
+let g:vimtex_quickfix_latexlog = {
+            \ 'default' : 1,
+            \ 'fix_paths' : 0,
+            \ 'general' : 1,
+            \ 'references' : 1,
+            \ 'overfull' : 1,
+            \ 'underfull' : 1,
+            \ 'font' : 1,
+            \ 'packages' : {
+            \   'default' : 1,
+            \   'natbib' : 1,
+            \   'biblatex' : 1,
+            \   'babel' : 1,
+            \   'hyperref' : 1,
+            \   'scrreprt' : 1,
+            \   'fixltx2e' : 1,
+            \   'titlesec' : 1,
+            \ },
+            \}
+
+call plug#end()
+
+let g:SnazzyTransparent = 1
+colorscheme snazzy
+
+"}}}
+"
+
