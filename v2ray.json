@@ -17,8 +17,8 @@
 					"address": "nicegeek.tk",
 					"port": 443,
 					"users": [{
-						"id": "126efcb8-6ebd-3ca7-52af-820ccaaaac0b",// ***唯一需要修改的地方*****
-						"alterId": 50
+						"id": "6acb3c59-a02b-4c79-98d9-0cf3785822bb",// ***唯一需要修改的地方*****
+						"alterId": 32
 					}]
 				}]
 			},

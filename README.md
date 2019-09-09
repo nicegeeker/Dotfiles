@@ -12,6 +12,7 @@
 
 ## Linux系统专用
 - congfig/i3
+- gitconfig
 
 ## 其他
 font:字体
