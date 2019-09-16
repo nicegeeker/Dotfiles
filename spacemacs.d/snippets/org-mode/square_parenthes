@@ -1,0 +1,5 @@
+# -*- mode: snippet -*-
+# name: squre-parenthes
+# key: fkh
+# --
+\left[ &0 \right]
