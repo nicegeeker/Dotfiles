@@ -37,29 +37,18 @@ values."
      ;; <M-m f e R> (Emacs style) to install them.
      ;; ----------------------------------------------------------------
      helm
-     (auto-completion :variables
-                      auto-completion-return-key-behavior 'complete
-                      auto-completion-tab-key-behavior 'cycle
-                      auto-completion-complete-with-key-sequence nil
-                      auto-completion-complete-with-key-sequence-delay 0.1
-                      auto-completion-private-snippets-directory nil)
-     ;; better-defaults
+     auto-completion
+     better-defaults
      emacs-lisp
      git
      ;; markdown
-     (org :variables
-          org-enable-github-support t
-          org-enable-reveal-js-support t
-          )
-     (shell :variables
-            shell-default-height 30
-            shell-default-position 'bottom)
+     org
+     ;; (shell :variables
+     ;;        shell-default-height 30
+     ;;        shell-default-position 'bottom)
      spell-checking
      syntax-checking
      ;; version-control
-     python
-     chinese
-     latex
      )
    ;; List of additional packages that will be installed without being
    ;; wrapped in a layer. If you need some configuration for these
@@ -112,10 +101,7 @@ values."
    ;; with `:variables' keyword (similar to layers). Check the editing styles
    ;; section of the documentation for details on available variables.
    ;; (default 'vim)
-   dotspacemacs-editing-style '(hybrid :variables
-                                        hybrid-mode-enable-evilified-state t
-                                        hybrid-mode-enable-hjkl-bindings nil
-                                        hybrid-mode-default-state 'normal)
+   dotspacemacs-editing-style 'vim
    ;; If non nil output loading progress in `*Messages*' buffer. (default nil)
    dotspacemacs-verbose-loading nil
    ;; Specify the startup banner. Default value is `official', it displays
@@ -132,10 +118,7 @@ values."
    ;; List sizes may be nil, in which case
    ;; `spacemacs-buffer-startup-lists-length' takes effect.
    dotspacemacs-startup-lists '((recents . 5)
-                                (projects . 7)
-                                (bookmarks . 5)
-                                (agenda . 5)
-                                (todos . 5))
+                                (projects . 7))
    ;; True if the home buffer should respond to resize events.
    dotspacemacs-startup-buffer-responsive t
    ;; Default major mode of the scratch buffer (default `text-mode')
@@ -150,7 +133,7 @@ values."
    ;; Default font, or prioritized list of fonts. `powerline-scale' allows to
    ;; quickly tweak the mode-line size to make separators look not too crappy.
    dotspacemacs-default-font '("Source Code Pro for Powerline"
-                               :size 15
+                               :size 14
                                :weight normal
                                :width normal
                                :powerline-scale 1.1)
@@ -307,7 +290,7 @@ values."
    ;; `trailing' to delete only the whitespace at end of lines, `changed'to
    ;; delete only whitespace for changed lines or `nil' to disable cleanup.
    ;; (default nil)
-   dotspacemacs-whitespace-cleanup 'trailing
+   dotspacemacs-whitespace-cleanup nil
    ))
 
 (defun dotspacemacs/user-init ()
@@ -326,13 +309,41 @@ layers configuration.
 This is the place where most of your configurations should be done. Unless it is
 explicitly specified that a variable should be set before a package is loaded,
 you should place your code here."
+  ;; Set ESC to "jk"
   (setq-default evil-escape-key-sequence "jk")
-  (spacemacs//set-monospaced-font   "Source Code Pro for Powerline" "Hiragino Sans GB" 14 16)
-  (with-eval-after-load 'org
-    ;; here goes your Org config :)
-   (setq org-default-notes-file (concat org-directory "/notes.org"))
-   )
-  (add-hook 'doc-view-mode-hook 'auto-revert-mode)
+  ;; Config for org-mode
+  (setq org-todo-keywords '(
+                            (sequence "TODO(t!)" "NEXT(n!)" "STARTED(s!)" "WAIT(w@/!)" "|" "DONE(d)" "CANCELLED(c)")
+                            ))
+  (setq org-tag-persistent-alist 
+        '(("@phone" . ?p) 
+          ("@computer" . ?c) 
+          ("PROJECT" . ?P)
+          ("STUDY" . ?s)
+          ("THESIS" . ?t)
+          ))
+  (setq org-default-notes-file "~/org/0_GTD.org")
+  
+  (setq org-capture-templates
+        '(
+          ("t" "Todo[INBOX]" entry (file+headline "~/org/0_INBOX.org" "Tasks")
+           "* TODO %?\n  %i\n  %u\n  %a")
+          ("T" "Thesis" entry (file+headline "~/org/3_thesis_reading.org" "新增文献")
+           "* TODO %?\n  %i\n  %u\n  %a")
+          ))
+  (setq org-refile-targets '(
+                             ("~/org/0_GTD.org" :maxlevel . 3)
+                             ("~/org/0_SOMEDAY.org" :level . 1)
+                             ("~/org/2_study_notes.org" :maxlevel . 2)
+                             ))
+  (setq org-agenda-files '(
+                           "~/org/0_INBOX.org"
+                           "~/org/0_GTD.org"
+                           "~/org/2_study_notes.org"
+                           "~/org/3_thesis_reading.org"
+                           "~/org/8_class_arrangement_for_rose.org"
+                           "~/org/notes_meeting.org"
+                           ))
   )
 
 ;; Do not write anything past this comment. This is where Emacs will
@@ -342,23 +353,9 @@ you should place your code here."
  ;; If you edit it by hand, you could mess it up, so be careful.
  ;; Your init file should contain only one such instance.
  ;; If there is more than one, they won't work right.
- '(org-agenda-files
-   (quote
-    ("~/Documents/Notes/thesis_reading.org" "~/org/notes.org" "~/Documents/thesis_reading.org")))
- '(org-format-latex-header
-   "\\documentclass[journal]{IEEEtran}
-\\pagestyle{empty}
-\\usepackage{amsmath}
-\\usepackage{amssymb}
-\\usepackage{algorithmic}
-\\usepackage{array}")
- '(org-format-latex-options
-   (quote
-    (:foreground default :background default :scale 2 :html-foreground "Black" :html-background "Transparent" :html-scale 1.0 :matchers
-                 ("begin" "$1" "$" "$$" "\\(" "\\["))))
  '(package-selected-packages
    (quote
-    (company-auctex auctex-latexmk auctex pyim pyim-basedict xr pangu-spacing find-by-pinyin-dired ace-pinyin pinyinlib yapfify xterm-color shell-pop pyvenv pytest pyenv-mode py-isort pip-requirements multi-term live-py-mode hy-mode dash-functional helm-pydoc flyspell-correct-helm flyspell-correct flycheck-pos-tip pos-tip flycheck eshell-z eshell-prompt-extras esh-help cython-mode company-anaconda anaconda-mode auto-dictionary pythonic helm-company helm-c-yasnippet fuzzy company-statistics company auto-yasnippet yasnippet ac-ispell auto-complete ox-reveal ox-gfm smeargle orgit org-projectile org-category-capture org-present org-pomodoro alert log4e gntp org-mime org-download magit-gitflow magit-popup htmlize helm-gitignore gnuplot gitignore-mode gitconfig-mode gitattributes-mode git-timemachine git-messenger git-link evil-magit magit transient git-commit with-editor ws-butler winum which-key volatile-highlights vi-tilde-fringe uuidgen use-package toc-org spaceline powerline restart-emacs request rainbow-delimiters popwin persp-mode pcre2el paradox spinner org-plus-contrib org-bullets open-junk-file neotree move-text macrostep lorem-ipsum linum-relative link-hint indent-guide hydra lv hungry-delete hl-todo highlight-parentheses highlight-numbers parent-mode highlight-indentation helm-themes helm-swoop helm-projectile projectile pkg-info epl helm-mode-manager helm-make helm-flx helm-descbinds helm-ag google-translate golden-ratio flx-ido flx fill-column-indicator fancy-battery eyebrowse expand-region exec-path-from-shell evil-visualstar evil-visual-mark-mode evil-unimpaired evil-tutor evil-surround evil-search-highlight-persist highlight evil-numbers evil-nerd-commenter evil-mc evil-matchit evil-lisp-state smartparens evil-indent-plus evil-iedit-state iedit evil-exchange evil-escape evil-ediff evil-args evil-anzu anzu evil goto-chg undo-tree eval-sexp-fu elisp-slime-nav dumb-jump f dash s diminish define-word column-enforce-mode clean-aindent-mode bind-map bind-key auto-highlight-symbol auto-compile packed aggressive-indent adaptive-wrap ace-window ace-link ace-jump-helm-line helm avy helm-core popup async))))
+    (unfill smeargle orgit org-projectile org-category-capture org-present org-pomodoro alert log4e gntp org-mime org-download mwim magit-gitflow magit-popup htmlize helm-gitignore helm-company helm-c-yasnippet gnuplot gitignore-mode gitconfig-mode gitattributes-mode git-timemachine git-messenger git-link fuzzy flyspell-correct-helm flyspell-correct flycheck-pos-tip pos-tip flycheck evil-magit magit transient git-commit with-editor company-statistics company auto-yasnippet yasnippet auto-dictionary ac-ispell auto-complete ws-butler winum which-key volatile-highlights vi-tilde-fringe uuidgen use-package toc-org spaceline powerline restart-emacs request rainbow-delimiters popwin persp-mode pcre2el paradox spinner org-plus-contrib org-bullets open-junk-file neotree move-text macrostep lorem-ipsum linum-relative link-hint indent-guide hydra lv hungry-delete hl-todo highlight-parentheses highlight-numbers parent-mode highlight-indentation helm-themes helm-swoop helm-projectile projectile pkg-info epl helm-mode-manager helm-make helm-flx helm-descbinds helm-ag google-translate golden-ratio flx-ido flx fill-column-indicator fancy-battery eyebrowse expand-region exec-path-from-shell evil-visualstar evil-visual-mark-mode evil-unimpaired evil-tutor evil-surround evil-search-highlight-persist highlight evil-numbers evil-nerd-commenter evil-mc evil-matchit evil-lisp-state smartparens evil-indent-plus evil-iedit-state iedit evil-exchange evil-escape evil-ediff evil-args evil-anzu anzu evil goto-chg undo-tree eval-sexp-fu elisp-slime-nav dumb-jump f dash s diminish define-word column-enforce-mode clean-aindent-mode bind-map bind-key auto-highlight-symbol auto-compile packed aggressive-indent adaptive-wrap ace-window ace-link ace-jump-helm-line helm avy helm-core popup async))))
 (custom-set-faces
  ;; custom-set-faces was added by Custom.
  ;; If you edit it by hand, you could mess it up, so be careful.
