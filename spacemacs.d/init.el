@@ -62,9 +62,13 @@ values."
             shell-default-position 'bottom
             )
      (spell-checking :variables
+                     spell-checking-enable-by-default nil
                      enable-flyspell-auto-completion t
                      )
-     syntax-checking
+     (syntax-checking :variables
+                      syntax-checking-enable-tooltips nil
+                      syntax-checking-enable-by-default nil
+                      )
      ;; version-control
      html
      latex
@@ -80,6 +84,7 @@ values."
    ;; packages, then consider creating a layer. You can also put the
    ;; configuration in `dotspacemacs/user-config'.
    dotspacemacs-additional-packages '(
+                                      posframe
                                       )
    ;; A list of packages that cannot be updated.
    dotspacemacs-frozen-packages '()
@@ -343,7 +348,7 @@ you should place your code here."
   ;; 我自己使用的中英文动态切换规则是：
   ;; 1. 光标只有在注释里面时，才可以输入中文。
   ;; 2. 光标前是汉字字符时，才能输入中文。
-  ;; 3. 使用 M-j 快捷键，强制将光标前的拼音字符串转换为中文。
+  ;; 3. 使用 M-j 快捷键，强制将光标前的拼音字符串转换为中文。这个绘制的选词框，速度如何呢速度个
   (setq-default pyim-english-input-switch-functions
                 '(pyim-probe-dynamic-english
                   ;; pyim-probe-isearch-mode
@@ -357,7 +362,7 @@ you should place your code here."
   ;; (pyim-isearch-mode 1)
   ;; 选词框显示5个候选词
   (setq pyim-page-length 5)
-  (global-set-key (kbd "C-x t") 'pyim-convert-string-at-point)
+  (global-set-key (kbd "M-i") 'pyim-convert-string-at-point)
   ;; (spacemacs/declare-prefix "o" "my-keybindings")
   ;; (spacemacs/set-leader-keys "oy" 'youdao-dictionary-search-at-point)
   ;; (("M-j" . pyim-convert-string-at-point) ;与 pyim-probe-dynamic-english 配合
@@ -365,15 +370,18 @@ you should place your code here."
   ;; 设置简便输入的词条
   (defun my-converter (string)
     (if (equal string "二呆") "“一个超级帅的小伙子”" string)
+    (if (equal string "出邮箱") "yi-qun.xu@foxmail.com" string)
     )
   (setq pyim-magic-converter #'my-converter)
-  (setq pyim-page-tooltip 'popup)
-  ;; 设置中文等宽字体，解决org表格中英文混合的问题
+  (setq pyim-page-tooltip 'posframe)
+  ;; 设置中文等宽字体，解决org表格中英文混合的问题。
   (spacemacs//set-monospaced-font   "Source Code Pro for Powerline" "Hiragino Sans GB" 14 16)
 
 
   ;; Set ESC to "jk"
   (setq-default evil-escape-key-sequence "jk")
+
+
   (setq ispell-program-name "/usr/local/bin/aspell")
 
 
@@ -511,10 +519,10 @@ you should place your code here."
  '(emojify-emoji-set "twemoji-v2-22")
  '(package-selected-packages
    (quote
-    (unicode-fonts ucs-utils font-utils persistent-soft list-utils pcache emojify ht youdao-dictionary names chinese-word-at-point fcitx pyim pyim-basedict xr pangu-spacing find-by-pinyin-dired ace-pinyin pinyinlib flyspell-popup emoji-cheat-sheet-plus company-emoji yapfify xterm-color web-mode tagedit slim-mode shell-pop scss-mode sass-mode pyvenv pytest pyenv-mode py-isort pug-mode pip-requirements ox-reveal ox-gfm org-ref pdf-tools key-chord ivy tablist multi-term mmm-mode markdown-toc markdown-mode live-py-mode hy-mode dash-functional helm-pydoc helm-css-scss helm-bibtex parsebib haml-mode gh-md eshell-z eshell-prompt-extras esh-help emmet-mode cython-mode company-web web-completion-data company-quickhelp company-auctex company-anaconda biblio biblio-core auctex anaconda-mode pythonic unfill smeargle orgit org-projectile org-category-capture org-present org-pomodoro alert log4e gntp org-mime org-download mwim magit-gitflow magit-popup htmlize helm-gitignore helm-company helm-c-yasnippet gnuplot gitignore-mode gitconfig-mode gitattributes-mode git-timemachine git-messenger git-link fuzzy flyspell-correct-helm flyspell-correct flycheck-pos-tip pos-tip flycheck evil-magit magit transient git-commit with-editor company-statistics company auto-yasnippet yasnippet auto-dictionary ac-ispell auto-complete ws-butler winum which-key volatile-highlights vi-tilde-fringe uuidgen use-package toc-org spaceline powerline restart-emacs request rainbow-delimiters popwin persp-mode pcre2el paradox spinner org-plus-contrib org-bullets open-junk-file neotree move-text macrostep lorem-ipsum linum-relative link-hint indent-guide hydra lv hungry-delete hl-todo highlight-parentheses highlight-numbers parent-mode highlight-indentation helm-themes helm-swoop helm-projectile projectile pkg-info epl helm-mode-manager helm-make helm-flx helm-descbinds helm-ag google-translate golden-ratio flx-ido flx fill-column-indicator fancy-battery eyebrowse expand-region exec-path-from-shell evil-visualstar evil-visual-mark-mode evil-unimpaired evil-tutor evil-surround evil-search-highlight-persist highlight evil-numbers evil-nerd-commenter evil-mc evil-matchit evil-lisp-state smartparens evil-indent-plus evil-iedit-state iedit evil-exchange evil-escape evil-ediff evil-args evil-anzu anzu evil goto-chg undo-tree eval-sexp-fu elisp-slime-nav dumb-jump f dash s diminish define-word column-enforce-mode clean-aindent-mode bind-map bind-key auto-highlight-symbol auto-compile packed aggressive-indent adaptive-wrap ace-window ace-link ace-jump-helm-line helm avy helm-core popup async)))
+    (posframe unicode-fonts ucs-utils font-utils persistent-soft list-utils pcache emojify ht youdao-dictionary names chinese-word-at-point fcitx pyim pyim-basedict xr pangu-spacing find-by-pinyin-dired ace-pinyin pinyinlib flyspell-popup emoji-cheat-sheet-plus company-emoji yapfify xterm-color web-mode tagedit slim-mode shell-pop scss-mode sass-mode pyvenv pytest pyenv-mode py-isort pug-mode pip-requirements ox-reveal ox-gfm org-ref pdf-tools key-chord ivy tablist multi-term mmm-mode markdown-toc markdown-mode live-py-mode hy-mode dash-functional helm-pydoc helm-css-scss helm-bibtex parsebib haml-mode gh-md eshell-z eshell-prompt-extras esh-help emmet-mode cython-mode company-web web-completion-data company-quickhelp company-auctex company-anaconda biblio biblio-core auctex anaconda-mode pythonic unfill smeargle orgit org-projectile org-category-capture org-present org-pomodoro alert log4e gntp org-mime org-download mwim magit-gitflow magit-popup htmlize helm-gitignore helm-company helm-c-yasnippet gnuplot gitignore-mode gitconfig-mode gitattributes-mode git-timemachine git-messenger git-link fuzzy flyspell-correct-helm flyspell-correct flycheck-pos-tip pos-tip flycheck evil-magit magit transient git-commit with-editor company-statistics company auto-yasnippet yasnippet auto-dictionary ac-ispell auto-complete ws-butler winum which-key volatile-highlights vi-tilde-fringe uuidgen use-package toc-org spaceline powerline restart-emacs request rainbow-delimiters popwin persp-mode pcre2el paradox spinner org-plus-contrib org-bullets open-junk-file neotree move-text macrostep lorem-ipsum linum-relative link-hint indent-guide hydra lv hungry-delete hl-todo highlight-parentheses highlight-numbers parent-mode highlight-indentation helm-themes helm-swoop helm-projectile projectile pkg-info epl helm-mode-manager helm-make helm-flx helm-descbinds helm-ag google-translate golden-ratio flx-ido flx fill-column-indicator fancy-battery eyebrowse expand-region exec-path-from-shell evil-visualstar evil-visual-mark-mode evil-unimpaired evil-tutor evil-surround evil-search-highlight-persist highlight evil-numbers evil-nerd-commenter evil-mc evil-matchit evil-lisp-state smartparens evil-indent-plus evil-iedit-state iedit evil-exchange evil-escape evil-ediff evil-args evil-anzu anzu evil goto-chg undo-tree eval-sexp-fu elisp-slime-nav dumb-jump f dash s diminish define-word column-enforce-mode clean-aindent-mode bind-map bind-key auto-highlight-symbol auto-compile packed aggressive-indent adaptive-wrap ace-window ace-link ace-jump-helm-line helm avy helm-core popup async)))
  '(pyim-dicts
    (quote
-    ((:name "pyim-bigdict" :file "/Users/sat/Downloads/pyim-bigdict.pyim")))))
+    ((:name "pyim-bigdict" :file "~/.spacemacs.d/pyim-dict/pyim-bigdict.pyim")))))
 (custom-set-faces
  ;; custom-set-faces was added by Custom.
  ;; If you edit it by hand, you could mess it up, so be careful.
