@@ -476,6 +476,28 @@ you should place your code here."
   ;; shell warning
   (setq exec-path-from-shell-check-startup-files nil)
 
+  ;; org export latex set
+  (with-eval-after-load 'ox-latex
+    (add-to-list 'org-latex-classes
+                 '("IEEEtran"
+                   "\\documentclass{IEEEtran}
+\\usepackage{cite}
+\\usepackage[pdftex]{graphicx}
+\\graphicspath{./image/}
+\\DeclareGraphicsExtensions{.pdf, .jpeg, .png}
+\\usepackage{amsmath}
+\\usepackage{amssymb}
+\\interdisplaylinepenalty=2500
+\\usepackage{algorithmic}
+\\usepackage{array}
+\\usepackage[caption=false, font=footnotesize]{subfig}
+[NO-DEFAULT-PACKAGES]
+[NO-PACKAGES]
+[EXTRA]"
+                   ("\\section{%s}" . "\\section*{%s}")
+                   ("\\subsection{%s}" . "\\subsection*{%s}")
+                   ("\\subsubsection{%s}" . "\\subsubsection*{%s}")
+                   ("\\paragraph{%s}" . "\\paragraph*{%s}"))))
 
   )
 

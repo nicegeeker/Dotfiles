@@ -1,0 +1,54 @@
+# -*- mode: snippet -*-
+# name: IEEE
+# key: <IE
+# --
+#+TITLE: first
+#+AUTHOR: Yi-qun Xu
+#+DESCRIPTION: 
+#+KEYWORDS: 
+#+CREATOR: Spacemacs
+#+LATEX_COMPILER: pdflatex
+#+OPTIONS: toc:nil date:nil title:nil author:nil
+#+LATEX_CLASS: IEEEtran
+#+LATEX_CLASS_OPTIONS: [9pt|*10pt*|11pt|12pt, draftcls|*journal*|conference, *oneside*|twoside, onecolumn|*twocolumn*]
+#+LATEX_HEADER: \usepackage{hyperref}
+#+STARTUP: overview
+
+#+BEGIN_EXPORT latex
+\author{
+Yi-qun~Xu,~\IEEEmembership{Member,~IEEE,}
+XXXXX,~\IEEEmembership{Life~Fellow,~IEEE}
+\thanks{M. Shell was with the Department of Electrical and Computer Engineering, Georgia Institute of Technology, Atlanta,GA, 30332 USA e-mail: (see http://www.michaelshell.org/contact.html).}
+\thanks{J. Doe and J. Doe are with Anonymous University.}
+\thanks{Manuscript received April 19, 2005; revised August 26, 2015.}}
+
+\markboth{}{}
+%\IEEEspecialpapernotice{(Invited Paper)}
+\maketitle
+#+END_EXPORT
+
+
+#+BEGIN_abstract
+
+#+END_abstract
+
+
+#+BEGIN_IEEEkeywords
+
+#+END_IEEEkeywords
+
+* Introduction
+@@latex:\IEEEPARstart{}{}@@
+* Section 2
+
+ 
+#+BEGIN_EXPORT latex
+\bibliographystyle{IEEEtran}
+\bibliography{./bibtex/IEEEabrv,./bibtex/mybibfile}
+#+END_EXPORT
+
+#+ATTR_LATEX: :options [{\includegraphics[width=1in,height=1.25in,clip,keepaspectratio]{./author/xuyiqun}}]{Yi-qun Xu}
+#+BEGIN_IEEEbiography
+Yi-qun Xu received the B.S. and M.S. degrees in information and communication engineering from the PLA University of Science and Technology, Nanjing, China, in 2005 and 2010, respectively. He is currently pursuing the Ph.D. degree with Army Engineering University of PLA, Nanjing, China.
+  His current research interests include cognitive radio, spectrum sensing, spatial-temporal data analysis, big data analysis, and machine learning.
+#+END_IEEEbiography
