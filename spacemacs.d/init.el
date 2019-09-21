@@ -36,6 +36,7 @@ values."
      ;; Uncomment some layer names and press <SPC f e R> (Vim style) or
      ;; <M-m f e R> (Emacs style) to install them.
      ;; ----------------------------------------------------------------
+     nicegeek
      helm
      (auto-completion :variables
                       auto-completion-return-key-behavior 'complete
@@ -56,24 +57,30 @@ values."
           org-enable-reveal-js-support t
           ;; projects supprot not added
           )
-
      (shell :variables
             shell-default-height 30
-            shell-default-position 'bottom)
-     spell-checking
+            shell-default-position 'bottom
+            )
+     (spell-checking :variables
+                     enable-flyspell-auto-completion t
+                     )
      syntax-checking
      ;; version-control
      html
      latex
      bibtex
      python
-     emoji
+     (chinese :variables
+              ;; chinese-enable-fcitx t
+              chinese-enable-youdao-dict t
+              )
      )
    ;; List of additional packages that will be installed without being
    ;; wrapped in a layer. If you need some configuration for these
    ;; packages, then consider creating a layer. You can also put the
    ;; configuration in `dotspacemacs/user-config'.
-   dotspacemacs-additional-packages '()
+   dotspacemacs-additional-packages '(
+                                      )
    ;; A list of packages that cannot be updated.
    dotspacemacs-frozen-packages '()
    ;; A list of packages that will not be installed and loaded.
@@ -322,27 +329,72 @@ before packages are loaded. If you are unsure, you should try in setting them in
   )
 
 (defun dotspacemacs/user-config ()
-  "Configuration function for user code.
-This function is called at the very end of Spacemacs initialization after
+  "configuration function for user code.
+this function is called at the very end of spacemacs initialization after
 layers configuration.
-This is the place where most of your configurations should be done. Unless it is
+this is the place where most of your configurations should be done. unless it is
 explicitly specified that a variable should be set before a package is loaded,
 you should place your code here."
+  ;; 我使用全拼
+  (setq pyim-default-scheme 'quanpin)
+  (setq pyim-punctuation-translate-p '(auto yes no))   ;中文使用全角标点，英文使用半角标点
+
+  ;; 设置 pyim 探针设置，这是 pyim 高级功能设置，可以实现 *无痛* 中英文切换 :-)
+  ;; 我自己使用的中英文动态切换规则是：
+  ;; 1. 光标只有在注释里面时，才可以输入中文。
+  ;; 2. 光标前是汉字字符时，才能输入中文。
+  ;; 3. 使用 M-j 快捷键，强制将光标前的拼音字符串转换为中文。
+  (setq-default pyim-english-input-switch-functions
+                '(pyim-probe-dynamic-english
+                  ;; pyim-probe-isearch-mode
+                  pyim-probe-program-mode
+                  pyim-probe-org-structure-template))
+
+  (setq-default pyim-punctuation-half-width-functions
+                '(pyim-probe-punctuation-line-beginning
+                  pyim-probe-punctuation-after-punctuation))
+  ;; 开启拼音搜索功能
+  ;; (pyim-isearch-mode 1)
+  ;; 选词框显示5个候选词
+  (setq pyim-page-length 5)
+  (global-set-key (kbd "C-x t") 'pyim-convert-string-at-point)
+  ;; (spacemacs/declare-prefix "o" "my-keybindings")
+  ;; (spacemacs/set-leader-keys "oy" 'youdao-dictionary-search-at-point)
+  ;; (("M-j" . pyim-convert-string-at-point) ;与 pyim-probe-dynamic-english 配合
+  ;; ("C-;" . pyim-delete-word-from-personal-buffer))
+  ;; 设置简便输入的词条
+  (defun my-converter (string)
+    (if (equal string "二呆") "“一个超级帅的小伙子”" string)
+    )
+  (setq pyim-magic-converter #'my-converter)
+  (setq pyim-page-tooltip 'popup)
+  ;; 设置中文等宽字体，解决org表格中英文混合的问题
+  (spacemacs//set-monospaced-font   "Source Code Pro for Powerline" "Hiragino Sans GB" 14 16)
+
+
   ;; Set ESC to "jk"
   (setq-default evil-escape-key-sequence "jk")
+  (setq ispell-program-name "/usr/local/bin/aspell")
+
+
   ;; Config for org-mode
+  (defun org-summary-todo (n-done n-not-done)
+    "Switch entry to DONE when all subentries are done, to TODO otherwise."
+    (let (org-log-done org-log-states) ; turn off logging
+      (org-todo (if (= n-not-done 0) "DONE" "TODO"))))
+  (add-hook 'org-after-todo-statistics-hook 'org-summary-todo)
   (setq org-todo-keywords '(
                             (sequence "TODO(t!)" "NEXT(n!)" "STARTED(s!)" "WAIT(w@/!)" "|" "DONE(d)" "CANCELLED(c)")
                             ))
-  (setq org-tag-persistent-alist 
-        '(("@phone" . ?p) 
-          ("@computer" . ?c) 
+  (setq org-tag-persistent-alist
+        '(("@phone" . ?p)
+          ("@computer" . ?c)
           ("WORK" . ?w)
           ("STUDY" . ?s)
           ("THESIS" . ?t)
           ))
   (setq org-default-notes-file "~/org/0_GTD.org")
-  
+
   (setq org-capture-templates
         '(
           ("t" "Todo[INBOX]" entry (file+headline "~/org/0_INBOX.org" "Tasks")
@@ -363,10 +415,64 @@ you should place your code here."
                            "~/org/8_class_arrangement_for_rose.org"
                            "~/org/notes_meeting.org"
                            ))
-  ;; Appearance of org-mode 
+  (setq org-agenda-custom-commands
+        '(
+          ("w" . "任务安排")
+          ("wa" "重要且紧急的任务" tags-todo "+PRIORITY=\"A\"")
+          ("wb" "重要且不紧急的任务" tags-todo "-Weekly-Monthly-Daily+PRIORITY=\"B\"")
+          ("wc" "不重要且不紧急的任务" tags-todo "+PRIORITY=\"C\"")
+          )
+
+        )
+  ;; Appearance of org-mode
   (setq org-ellipsis "⤵")
+  (setq org-bullets-bullet-list '("🐉" "🐤" "🐠" "🐟"))
+
   ;; UUID for links
-  (setq org-id-link-to-org-use-id 'create-if-interactive)
+  (setq org-id-link-to-org-use-id 'create-if-interactive-and-no-custom-id)
+  (defun eos/org-custom-id-get (&optional pom create prefix)
+    "Get the CUSTOM_ID property of the entry at point-or-marker POM.
+   If POM is nil, refer to the entry at point. If the entry does
+   not have an CUSTOM_ID, the function returns nil. However, when
+   CREATE is non nil, create a CUSTOM_ID if none is present
+   already. PREFIX will be passed through to `org-id-new'. In any
+   case, the CUSTOM_ID of the entry is returned."
+    (interactive)
+    (org-with-point-at pom
+      (let ((id (org-entry-get nil "CUSTOM_ID")))
+        (cond
+         ((and id (stringp id) (string-match "\\S-" id))
+          id)
+         (create
+          (setq id (org-id-new (concat prefix "h")))
+          (org-entry-put pom "CUSTOM_ID" id)
+          (org-id-add-location id (buffer-file-name (buffer-base-buffer)))
+          id)))))
+  (defun eos/org-add-ids-to-headlines-in-file ()
+    "Add CUSTOM_ID properties to all headlines in the current
+   file which do not already have one. Only adds ids if the
+   `auto-id' option is set to `t' in the file somewhere. ie,
+   #+OPTIONS: auto-id:t"
+    (interactive)
+    (save-excursion
+      (widen)
+      (goto-char (point-min))
+      (when (re-search-forward "^#\\+OPTIONS:.*auto-id:t" (point-max) t)
+        (org-map-entries (lambda () (eos/org-custom-id-get (point) 'create))))))
+  ;; automatically add ids to saved org-mode headlines
+  (add-hook 'org-mode-hook
+            (lambda ()
+              (add-hook 'before-save-hook
+                        (lambda ()
+                          (when (and (eq major-mode 'org-mode)
+                                     (eq buffer-read-only nil))
+                            (eos/org-add-ids-to-headlines-in-file))))))
+
+  ;; org-mode 中文换行问题
+  (add-hook 'org-mode-hook
+            (lambda () (setq truncate-lines nil)))
+
+
   ;; shell warning
   (setq exec-path-from-shell-check-startup-files nil)
 
@@ -380,9 +486,13 @@ you should place your code here."
  ;; If you edit it by hand, you could mess it up, so be careful.
  ;; Your init file should contain only one such instance.
  ;; If there is more than one, they won't work right.
+ '(emojify-emoji-set "twemoji-v2-22")
  '(package-selected-packages
    (quote
-    (yapfify xterm-color web-mode tagedit slim-mode shell-pop scss-mode sass-mode pyvenv pytest pyenv-mode py-isort pug-mode pip-requirements ox-reveal ox-gfm org-ref pdf-tools key-chord ivy tablist multi-term mmm-mode markdown-toc markdown-mode live-py-mode hy-mode dash-functional helm-pydoc helm-css-scss helm-bibtex parsebib haml-mode gh-md eshell-z eshell-prompt-extras esh-help emmet-mode cython-mode company-web web-completion-data company-quickhelp company-auctex company-anaconda biblio biblio-core auctex anaconda-mode pythonic unfill smeargle orgit org-projectile org-category-capture org-present org-pomodoro alert log4e gntp org-mime org-download mwim magit-gitflow magit-popup htmlize helm-gitignore helm-company helm-c-yasnippet gnuplot gitignore-mode gitconfig-mode gitattributes-mode git-timemachine git-messenger git-link fuzzy flyspell-correct-helm flyspell-correct flycheck-pos-tip pos-tip flycheck evil-magit magit transient git-commit with-editor company-statistics company auto-yasnippet yasnippet auto-dictionary ac-ispell auto-complete ws-butler winum which-key volatile-highlights vi-tilde-fringe uuidgen use-package toc-org spaceline powerline restart-emacs request rainbow-delimiters popwin persp-mode pcre2el paradox spinner org-plus-contrib org-bullets open-junk-file neotree move-text macrostep lorem-ipsum linum-relative link-hint indent-guide hydra lv hungry-delete hl-todo highlight-parentheses highlight-numbers parent-mode highlight-indentation helm-themes helm-swoop helm-projectile projectile pkg-info epl helm-mode-manager helm-make helm-flx helm-descbinds helm-ag google-translate golden-ratio flx-ido flx fill-column-indicator fancy-battery eyebrowse expand-region exec-path-from-shell evil-visualstar evil-visual-mark-mode evil-unimpaired evil-tutor evil-surround evil-search-highlight-persist highlight evil-numbers evil-nerd-commenter evil-mc evil-matchit evil-lisp-state smartparens evil-indent-plus evil-iedit-state iedit evil-exchange evil-escape evil-ediff evil-args evil-anzu anzu evil goto-chg undo-tree eval-sexp-fu elisp-slime-nav dumb-jump f dash s diminish define-word column-enforce-mode clean-aindent-mode bind-map bind-key auto-highlight-symbol auto-compile packed aggressive-indent adaptive-wrap ace-window ace-link ace-jump-helm-line helm avy helm-core popup async))))
+    (unicode-fonts ucs-utils font-utils persistent-soft list-utils pcache emojify ht youdao-dictionary names chinese-word-at-point fcitx pyim pyim-basedict xr pangu-spacing find-by-pinyin-dired ace-pinyin pinyinlib flyspell-popup emoji-cheat-sheet-plus company-emoji yapfify xterm-color web-mode tagedit slim-mode shell-pop scss-mode sass-mode pyvenv pytest pyenv-mode py-isort pug-mode pip-requirements ox-reveal ox-gfm org-ref pdf-tools key-chord ivy tablist multi-term mmm-mode markdown-toc markdown-mode live-py-mode hy-mode dash-functional helm-pydoc helm-css-scss helm-bibtex parsebib haml-mode gh-md eshell-z eshell-prompt-extras esh-help emmet-mode cython-mode company-web web-completion-data company-quickhelp company-auctex company-anaconda biblio biblio-core auctex anaconda-mode pythonic unfill smeargle orgit org-projectile org-category-capture org-present org-pomodoro alert log4e gntp org-mime org-download mwim magit-gitflow magit-popup htmlize helm-gitignore helm-company helm-c-yasnippet gnuplot gitignore-mode gitconfig-mode gitattributes-mode git-timemachine git-messenger git-link fuzzy flyspell-correct-helm flyspell-correct flycheck-pos-tip pos-tip flycheck evil-magit magit transient git-commit with-editor company-statistics company auto-yasnippet yasnippet auto-dictionary ac-ispell auto-complete ws-butler winum which-key volatile-highlights vi-tilde-fringe uuidgen use-package toc-org spaceline powerline restart-emacs request rainbow-delimiters popwin persp-mode pcre2el paradox spinner org-plus-contrib org-bullets open-junk-file neotree move-text macrostep lorem-ipsum linum-relative link-hint indent-guide hydra lv hungry-delete hl-todo highlight-parentheses highlight-numbers parent-mode highlight-indentation helm-themes helm-swoop helm-projectile projectile pkg-info epl helm-mode-manager helm-make helm-flx helm-descbinds helm-ag google-translate golden-ratio flx-ido flx fill-column-indicator fancy-battery eyebrowse expand-region exec-path-from-shell evil-visualstar evil-visual-mark-mode evil-unimpaired evil-tutor evil-surround evil-search-highlight-persist highlight evil-numbers evil-nerd-commenter evil-mc evil-matchit evil-lisp-state smartparens evil-indent-plus evil-iedit-state iedit evil-exchange evil-escape evil-ediff evil-args evil-anzu anzu evil goto-chg undo-tree eval-sexp-fu elisp-slime-nav dumb-jump f dash s diminish define-word column-enforce-mode clean-aindent-mode bind-map bind-key auto-highlight-symbol auto-compile packed aggressive-indent adaptive-wrap ace-window ace-link ace-jump-helm-line helm avy helm-core popup async)))
+ '(pyim-dicts
+   (quote
+    ((:name "pyim-bigdict" :file "/Users/sat/Downloads/pyim-bigdict.pyim")))))
 (custom-set-faces
  ;; custom-set-faces was added by Custom.
  ;; If you edit it by hand, you could mess it up, so be careful.
