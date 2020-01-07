@@ -41,11 +41,9 @@ XXXXX,~\IEEEmembership{Life~Fellow,~IEEE}
 @@latex:\IEEEPARstart{}{}@@
 * Section 2
 
- 
-#+BEGIN_EXPORT latex
-\bibliographystyle{IEEEtran}
-\bibliography{./bibtex/IEEEabrv,./bibtex/mybibfile}
-#+END_EXPORT
+bibliographystyle:IEEEtran
+bibliography:./bibtex/library.bib
+bibliography:./bibtex/IEEEabrv.bib
 
 #+ATTR_LATEX: :options [{\includegraphics[width=1in,height=1.25in,clip,keepaspectratio]{./author/xuyiqun}}]{Yi-qun Xu}
 #+BEGIN_IEEEbiography

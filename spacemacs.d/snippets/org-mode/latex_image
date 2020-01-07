@@ -1,0 +1,6 @@
+# -*- mode: snippet -*-
+# name: latex_image
+# key: <lim
+# --
+#+ATTR_LATEX: :caption \caption{${1:name of picture}} :width 3.5inches 
+[[images/${2:path}]]$0

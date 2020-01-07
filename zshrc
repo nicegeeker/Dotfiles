@@ -106,3 +106,6 @@ source ~/.bash_profile
 alias nfs_pub="sudo mount -t nfs 192.168.31.6:/mnt/HD/HD_a2/Public /private/Public"
 alias note="cd ~/Documents/Notes/"
 alias project="cd ~/Documents/Projects/"
+
+test -e "${HOME}/.iterm2_shell_integration.zsh" && source "${HOME}/.iterm2_shell_integration.zsh"
+

@@ -31,13 +31,16 @@ values."
    ;; List of configuration layers to load.
    dotspacemacs-configuration-layers
    '(
+     javascript
+     yaml
+     python
      ;; ----------------------------------------------------------------
      ;; Example of useful layers you may want to use right away.
      ;; Uncomment some layer names and press <SPC f e R> (Vim style) or
      ;; <M-m f e R> (Emacs style) to install them.
      ;; ----------------------------------------------------------------
-     nicegeek
-     helm
+     my-emoji
+     ;; my-stan
      (auto-completion :variables
                       auto-completion-return-key-behavior 'complete
                       auto-completion-tab-key-behavior 'cycle
@@ -49,35 +52,45 @@ values."
                       auto-completion-enable-sort-by-usage t
                       )
      better-defaults
+     bibtex
+     (c-c++ :variables
+            c-c++-default-mode-for-headers 'c++-mode)
+     (chinese :variables
+              ;; chinese-enable-fcitx t
+              chinese-enable-youdao-dict t
+              )
+     deft
      emacs-lisp
      git
-     markdown
+     gtags
+     helm
+     html
+     latex
+     (markdown :variables markdown-live-preview-engine 'vmd)
      (org :variables
           org-enable-github-support t
           org-enable-reveal-js-support t
           ;; projects supprot not added
           )
+     pdf-tools
+     (ranger :variables
+             ranger-show-preview t)
+     semantic
      (shell :variables
             shell-default-height 30
             shell-default-position 'bottom
             )
+     smex
      (spell-checking :variables
                      spell-checking-enable-by-default nil
                      enable-flyspell-auto-completion t
                      )
      (syntax-checking :variables
-                      syntax-checking-enable-tooltips nil
+                      syntax-checking-enable-tooltips t
                       syntax-checking-enable-by-default nil
                       )
+     themes-megapack
      ;; version-control
-     html
-     latex
-     bibtex
-     python
-     (chinese :variables
-              ;; chinese-enable-fcitx t
-              chinese-enable-youdao-dict t
-              )
      )
    ;; List of additional packages that will be installed without being
    ;; wrapped in a layer. If you need some configuration for these
@@ -121,7 +134,7 @@ values."
    ;; when the current branch is not `develop'. Note that checking for
    ;; new versions works via git commands, thus it calls GitHub services
    ;; whenever you start Emacs. (default nil)
-   dotspacemacs-check-for-update nil
+   dotspacemacs-check-for-update t
    ;; If non-nil, a form that evaluates to a package directory. For example, to
    ;; use different package directories for different Emacs versions, set this
    ;; to `emacs-version'.
@@ -141,7 +154,7 @@ values."
    ;; directory. A string value must be a path to an image format supported
    ;; by your Emacs build.
    ;; If the value is nil then no banner is displayed. (default 'official)
-   dotspacemacs-startup-banner 'official
+   dotspacemacs-startup-banner "/Users/sat/.emacs.d/core/banners/img/my_banner.png"
    ;; List of items to show in startup buffer or an association list of
    ;; the form `(list-type . list-size)`. If nil then it is disabled.
    ;; Possible values for list-type are:
@@ -149,7 +162,8 @@ values."
    ;; List sizes may be nil, in which case
    ;; `spacemacs-buffer-startup-lists-length' takes effect.
    dotspacemacs-startup-lists '((recents . 5)
-                                (projects . 7))
+                                (projects . 7)
+                                (agenda . 5))
    ;; True if the home buffer should respond to resize events.
    dotspacemacs-startup-buffer-responsive t
    ;; Default major mode of the scratch buffer (default `text-mode')
@@ -157,8 +171,11 @@ values."
    ;; List of themes, the first of the list is loaded when spacemacs starts.
    ;; Press <SPC> T n to cycle to the next theme in the list (works great
    ;; with 2 themes variants, one dark and one light)
-   dotspacemacs-themes '(spacemacs-dark
-                         spacemacs-light)
+   dotspacemacs-themes '(lush
+                         afternoon
+                         deeper-blue
+                         inkpot
+                         sanityinc-tomorrow-bright)
    ;; If non nil the cursor color matches the state color in GUI Emacs.
    dotspacemacs-colorize-cursor-according-to-state t
    ;; Default font, or prioritized list of fonts. `powerline-scale' allows to
@@ -209,7 +226,7 @@ values."
    dotspacemacs-display-default-layout nil
    ;; If non nil then the last auto saved layouts are resume automatically upon
    ;; start. (default nil)
-   dotspacemacs-auto-resume-layouts nil
+   dotspacemacs-auto-resume-layouts t
    ;; Size (in MB) above which spacemacs will prompt to open the large file
    ;; literally to avoid performance issues. Opening a file literally means that
    ;; no major mode or minor modes are active. (default is 1)
@@ -340,7 +357,15 @@ layers configuration.
 this is the place where most of your configurations should be done. unless it is
 explicitly specified that a variable should be set before a package is loaded,
 you should place your code here."
+  ;; Indentation
+  (indent-guide-global-mode 1)
+
+  ;; Show 80-column marker
+  (define-globalized-minor-mode global-fci-mode fci-mode (lambda () (fci-mode 1)))
+  (global-fci-mode 1)
+
   ;; 我使用全拼
+  (setq deft-directory "~/org/notes")
   (setq pyim-default-scheme 'quanpin)
   (setq pyim-punctuation-translate-p '(auto yes no))   ;中文使用全角标点，英文使用半角标点
 
@@ -375,7 +400,7 @@ you should place your code here."
   (setq pyim-magic-converter #'my-converter)
   (setq pyim-page-tooltip 'posframe)
   ;; 设置中文等宽字体，解决org表格中英文混合的问题。
-  (spacemacs//set-monospaced-font   "Source Code Pro for Powerline" "Hiragino Sans GB" 14 16)
+   (spacemacs//set-monospaced-font   "Source Code Pro for Powerline" "Hiragino Sans GB" 20 25)
 
 
   ;; Set ESC to "jk"
@@ -407,21 +432,16 @@ you should place your code here."
         '(
           ("t" "Todo[INBOX]" entry (file+headline "~/org/0_INBOX.org" "Tasks")
            "* TODO %?\n  %i\n  %u\n  %a")
-          ("T" "Thesis" entry (file+headline "~/org/3_thesis_reading.org" "新增文献")
+          ("T" "Thesis" entry (file+headline "~/org/notes/thesis_reading.org")
            "* TODO %?\n  %i\n  %u\n  %a")
           ))
   (setq org-refile-targets '(
-                             ("~/org/0_GTD.org" :maxlevel . 3)
+                             ("~/org/0_GTD.org" :maxlevel . 2)
                              ("~/org/0_SOMEDAY.org" :level . 1)
-                             ("~/org/2_study_notes.org" :maxlevel . 3)
                              ))
   (setq org-agenda-files '(
                            "~/org/0_INBOX.org"
                            "~/org/0_GTD.org"
-                           "~/org/2_study_notes.org"
-                           "~/org/3_thesis_reading.org"
-                           "~/org/8_class_arrangement_for_rose.org"
-                           "~/org/notes_meeting.org"
                            ))
   (setq org-agenda-custom-commands
         '(
@@ -476,6 +496,17 @@ you should place your code here."
                                      (eq buffer-read-only nil))
                             (eos/org-add-ids-to-headlines-in-file))))))
 
+  (setq deft-org-mode-title-prefix t)
+  (setq deft-file-naming-rules
+        '((noslash . "_")
+          (nospace . "_")
+          (case-fn . downcase)))
+
+  (defun nicegeek-deft-search-for(filter)
+    (interactive "MFilter: ")
+    (spacemacs/deft)
+    (deft-filter filter t)
+    )
   ;; org-mode 中文换行问题
   (add-hook 'org-mode-hook
             (lambda () (setq truncate-lines nil)))
@@ -507,6 +538,43 @@ you should place your code here."
                    ("\\subsubsection{%s}" . "\\subsubsection*{%s}")
                    ("\\paragraph{%s}" . "\\paragraph*{%s}"))))
 
+  (setq org-format-latex-header "\\documentclass{IEEEtran}
+\\usepackage[usenames]{color}
+\[PACKAGES]
+\[DEFAULT-PACKAGES]
+\\pagestyle{empty}      % do not remove
+% The settings below are copied from fullpage.sty
+\\setlength{\\textwidth}{\\paperwidth}
+\\addtolength{\\textwidth}{-3cm}
+\\setlength{\\oddsidemargin}{1.5cm}
+\\addtolength{\\oddsidemargin}{-2.54cm}
+\\setlength{\\evensidemargin}{\\oddsidemargin}
+\\setlength{\\textheight}{\\paperheight}
+\\addtolength{\\textheight}{-\\headheight}
+\\addtolength{\\textheight}{-\\headsep}
+\\addtolength{\\textheight}{-\\footskip}
+\\addtolength{\\textheight}{-3cm}
+\\setlength{\\topmargin}{1.5cm}
+\\addtolength{\\topmargin}{-2.54cm}")
+
+  (setq org-ref-default-bibliography '("~/org/My_thesis/bibtex/library.bib")
+        org-ref-bibliography-notes "~/org/notes/thesis_reading.org")
+  (setq org-ref-get-pdf-filename-function 'org-ref-get-mendeley-filename)
+
+  (setq org-latex-pdf-process 
+        '("latexmk -pdflatex='pdflatex -interaction nonstopmode' -pdf -bibtex -f %f"))
+  ;; 增大公式预览大小
+  ;;(setq org-format-latex-options (plist-put org-format-latex-options :scale 2.0))
+
+  ;; 为 pdf-tools 设置路径
+  (setenv "PKG_CONFIG_PATH"
+          (
+           concat
+           "/usr/local/Cellar/zlib/1.2.8/lib/pkgconfig"";"
+           "/usr/local/lib/pkgconfig"";"
+           "/opt/X11/lib/pkgconfig"
+          )
+   )
   )
 
 ;; Do not write anything past this comment. This is where Emacs will
@@ -519,7 +587,7 @@ you should place your code here."
  '(emojify-emoji-set "twemoji-v2-22")
  '(package-selected-packages
    (quote
-    (posframe unicode-fonts ucs-utils font-utils persistent-soft list-utils pcache emojify ht youdao-dictionary names chinese-word-at-point fcitx pyim pyim-basedict xr pangu-spacing find-by-pinyin-dired ace-pinyin pinyinlib flyspell-popup emoji-cheat-sheet-plus company-emoji yapfify xterm-color web-mode tagedit slim-mode shell-pop scss-mode sass-mode pyvenv pytest pyenv-mode py-isort pug-mode pip-requirements ox-reveal ox-gfm org-ref pdf-tools key-chord ivy tablist multi-term mmm-mode markdown-toc markdown-mode live-py-mode hy-mode dash-functional helm-pydoc helm-css-scss helm-bibtex parsebib haml-mode gh-md eshell-z eshell-prompt-extras esh-help emmet-mode cython-mode company-web web-completion-data company-quickhelp company-auctex company-anaconda biblio biblio-core auctex anaconda-mode pythonic unfill smeargle orgit org-projectile org-category-capture org-present org-pomodoro alert log4e gntp org-mime org-download mwim magit-gitflow magit-popup htmlize helm-gitignore helm-company helm-c-yasnippet gnuplot gitignore-mode gitconfig-mode gitattributes-mode git-timemachine git-messenger git-link fuzzy flyspell-correct-helm flyspell-correct flycheck-pos-tip pos-tip flycheck evil-magit magit transient git-commit with-editor company-statistics company auto-yasnippet yasnippet auto-dictionary ac-ispell auto-complete ws-butler winum which-key volatile-highlights vi-tilde-fringe uuidgen use-package toc-org spaceline powerline restart-emacs request rainbow-delimiters popwin persp-mode pcre2el paradox spinner org-plus-contrib org-bullets open-junk-file neotree move-text macrostep lorem-ipsum linum-relative link-hint indent-guide hydra lv hungry-delete hl-todo highlight-parentheses highlight-numbers parent-mode highlight-indentation helm-themes helm-swoop helm-projectile projectile pkg-info epl helm-mode-manager helm-make helm-flx helm-descbinds helm-ag google-translate golden-ratio flx-ido flx fill-column-indicator fancy-battery eyebrowse expand-region exec-path-from-shell evil-visualstar evil-visual-mark-mode evil-unimpaired evil-tutor evil-surround evil-search-highlight-persist highlight evil-numbers evil-nerd-commenter evil-mc evil-matchit evil-lisp-state smartparens evil-indent-plus evil-iedit-state iedit evil-exchange evil-escape evil-ediff evil-args evil-anzu anzu evil goto-chg undo-tree eval-sexp-fu elisp-slime-nav dumb-jump f dash s diminish define-word column-enforce-mode clean-aindent-mode bind-map bind-key auto-highlight-symbol auto-compile packed aggressive-indent adaptive-wrap ace-window ace-link ace-jump-helm-line helm avy helm-core popup async)))
+    (auctex-latexmk web-beautify livid-mode skewer-mode simple-httpd json-mode json-snatcher json-reformat js2-refactor multiple-cursors js2-mode js-doc company-tern tern coffee-mode yaml-mode gruvbox-theme darktooth-theme zenburn-theme zen-and-art-theme white-sand-theme underwater-theme ujelly-theme twilight-theme twilight-bright-theme twilight-anti-bright-theme toxi-theme tao-theme tangotango-theme tango-plus-theme tango-2-theme sunny-day-theme sublime-themes subatomic256-theme subatomic-theme spacegray-theme soothe-theme solarized-theme soft-stone-theme soft-morning-theme soft-charcoal-theme smyx-theme seti-theme reverse-theme rebecca-theme railscasts-theme purple-haze-theme professional-theme planet-theme phoenix-dark-pink-theme phoenix-dark-mono-theme organic-green-theme omtose-phellack-theme oldlace-theme occidental-theme obsidian-theme noctilux-theme naquadah-theme mustang-theme monokai-theme monochrome-theme molokai-theme moe-theme minimal-theme material-theme majapahit-theme madhat2r-theme lush-theme light-soap-theme jbeans-theme jazz-theme ir-black-theme inkpot-theme heroku-theme hemisu-theme hc-zenburn-theme gruber-darker-theme grandshell-theme gotham-theme gandalf-theme flatui-theme flatland-theme farmhouse-theme exotica-theme espresso-theme dracula-theme django-theme autothemer darkokai-theme darkmine-theme darkburn-theme dakrone-theme cyberpunk-theme color-theme-sanityinc-tomorrow color-theme-sanityinc-solarized clues-theme cherry-blossom-theme busybee-theme bubbleberry-theme birds-of-paradise-plus-theme badwolf-theme apropospriate-theme anti-zenburn-theme ample-zen-theme ample-theme alect-themes afternoon-theme stickyfunc-enhance srefactor smex helm-gtags helm-cscope xcscope ggtags vmd-mode stan-snippets stan-mode disaster company-c-headers cmake-mode clang-format ranger deft posframe unicode-fonts ucs-utils font-utils persistent-soft list-utils pcache emojify ht youdao-dictionary names chinese-word-at-point fcitx pyim pyim-basedict xr pangu-spacing find-by-pinyin-dired ace-pinyin pinyinlib flyspell-popup emoji-cheat-sheet-plus company-emoji yapfify xterm-color web-mode tagedit slim-mode shell-pop scss-mode sass-mode pyvenv pytest pyenv-mode py-isort pug-mode pip-requirements ox-reveal ox-gfm org-ref pdf-tools key-chord ivy tablist multi-term mmm-mode markdown-toc markdown-mode live-py-mode hy-mode dash-functional helm-pydoc helm-css-scss helm-bibtex parsebib haml-mode gh-md eshell-z eshell-prompt-extras esh-help emmet-mode cython-mode company-web web-completion-data company-quickhelp company-auctex company-anaconda biblio biblio-core auctex anaconda-mode pythonic unfill smeargle orgit org-projectile org-category-capture org-present org-pomodoro alert log4e gntp org-mime org-download mwim magit-gitflow magit-popup htmlize helm-gitignore helm-company helm-c-yasnippet gnuplot gitignore-mode gitconfig-mode gitattributes-mode git-timemachine git-messenger git-link fuzzy flyspell-correct-helm flyspell-correct flycheck-pos-tip pos-tip flycheck evil-magit magit transient git-commit with-editor company-statistics company auto-yasnippet yasnippet auto-dictionary ac-ispell auto-complete ws-butler winum which-key volatile-highlights vi-tilde-fringe uuidgen use-package toc-org spaceline powerline restart-emacs request rainbow-delimiters popwin persp-mode pcre2el paradox spinner org-plus-contrib org-bullets open-junk-file neotree move-text macrostep lorem-ipsum linum-relative link-hint indent-guide hydra lv hungry-delete hl-todo highlight-parentheses highlight-numbers parent-mode highlight-indentation helm-themes helm-swoop helm-projectile projectile pkg-info epl helm-mode-manager helm-make helm-flx helm-descbinds helm-ag google-translate golden-ratio flx-ido flx fill-column-indicator fancy-battery eyebrowse expand-region exec-path-from-shell evil-visualstar evil-visual-mark-mode evil-unimpaired evil-tutor evil-surround evil-search-highlight-persist highlight evil-numbers evil-nerd-commenter evil-mc evil-matchit evil-lisp-state smartparens evil-indent-plus evil-iedit-state iedit evil-exchange evil-escape evil-ediff evil-args evil-anzu anzu evil goto-chg undo-tree eval-sexp-fu elisp-slime-nav dumb-jump f dash s diminish define-word column-enforce-mode clean-aindent-mode bind-map bind-key auto-highlight-symbol auto-compile packed aggressive-indent adaptive-wrap ace-window ace-link ace-jump-helm-line helm avy helm-core popup async)))
  '(pyim-dicts
    (quote
     ((:name "pyim-bigdict" :file "~/.spacemacs.d/pyim-dict/pyim-bigdict.pyim")))))
@@ -528,5 +596,4 @@ you should place your code here."
  ;; If you edit it by hand, you could mess it up, so be careful.
  ;; Your init file should contain only one such instance.
  ;; If there is more than one, they won't work right.
- '(company-tooltip-common ((t (:inherit company-tooltip :weight bold :underline nil))))
- '(company-tooltip-common-selection ((t (:inherit company-tooltip-selection :weight bold :underline nil)))))
+ '(default ((t (:foreground "#E0E0E0" :background "#202020")))))

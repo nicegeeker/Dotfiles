@@ -2,5 +2,6 @@
 # name: image
 # key: <im
 # --
-#+caption: ${1:caption of the image}
-[[file:${2:image_path}]]$0
+#+CAPTION: ${1:caption of the image}
+#+NAME: ${2:fig}
+[[file:${3:image_path}]]$0
