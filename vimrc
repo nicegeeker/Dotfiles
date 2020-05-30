@@ -133,35 +133,43 @@ noremap <LEADER><CR> :nohlsearch<CR>
 "KeyMaping------------------------{{{
 inoremap jk <esc>
 inoremap <esc> <nop>
+
+nnoremap H 0
+nnoremap L $
+nnoremap J 5j
+nnoremap K 5k
+
 noremap s <nop>
 noremap S :w<CR>
 noremap Q :q<CR>
 noremap R :source $MYVIMRC<CR>
 
+"split screen
 noremap sl :set splitright<CR>:vsplit<CR>
 noremap sh :set nosplitright<CR>:vsplit<CR>
 noremap sk :set nosplitbelow<CR>:split<CR>
 noremap sj :set splitbelow<CR>:split<CR>
 
-
+"switch screen
 noremap <LEADER>l <C-w>l
 noremap <LEADER>h <C-w>h
 noremap <LEADER>j <C-w>j
 noremap <LEADER>k <C-w>k
 
+"swich position
 noremap sv <C-w>t<C-w>H
 noremap sf <C-w>t<C-w>K
 
 noremap <up> :res +5<CR>
 noremap <down> :res -5<CR>
-noremap <left> :vertical resize -5<CR>
+noremap <left> :vertical resize -4<CR>
 noremap <right> :vertical resize +5<CR>
 
 noremap tk :tabe<CR>
 noremap th :-tabnext<CR>
 noremap tl :+tabnext<CR>
 
-"编辑vimrc文件
+"edit vimrc
 nnoremap <leader>ev :vsplit $MYVIMRC<cr>
 
 "引号
@@ -171,11 +179,26 @@ nnoremap <leader>' viw<esc>a'<esc>hbi'<esc>lel
 
 nnoremap <c-u> viwU<esc>
 
+nnoremap <leader>" viw<esc>a"<esc>bi"<esc>lel
+
+" copy and paste
+noremap <leader>p "+p
+noremap <leader>y "+y
+
+
 inoremap <c-k> <esc>d$a
 inoremap <c-a> <esc>I
 inoremap <c-e> <esc>A
-"}}}
 
+
+"abbrevation
+iabbrev adn and
+
+" in next (
+:onoremap in( :<c-u>normal! f(vi(<cr>
+" in last (
+:onoremap il( :<c-u>normal! F)vi(<cr>
+"}}}
 
 
 
