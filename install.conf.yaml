@@ -1,0 +1,30 @@
+- defaults:
+    link:
+      relink: true
+      create: true
+
+- clean: ['~']
+
+
+- link:
+    ~/.vimrc: vim/vimrc
+    ~/.vim: vim/vim
+
+    ~/.gitconfig: gitconfig
+
+    ~/.skhdrc: macos-wm/skhdrc
+    ~/.yabairc: macos-wm/yabairc
+
+    ~/.zshrc: zshrc
+    ~/.spacemacs.d: spacemacs.d
+    ~/.fonts: fonts
+
+
+
+- create:
+  - ~/.config
+  
+
+- shell:
+  - git submodule sync --recursive
+  - git update-submodules 
