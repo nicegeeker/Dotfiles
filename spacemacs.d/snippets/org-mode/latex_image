@@ -1,8 +1,0 @@
-# -*- mode: snippet -*-
-# name: latex_image
-# key: <lim
-# --
-#+CAPTION: ${1:Caption of Image}
-#+NAME: fig:${2:Label Name}
-#+ATTR_LATEX: :placement [!tb] :width 208pt / 416pt
-[[./images/${3:Folder}/${4:FileName}]]$0

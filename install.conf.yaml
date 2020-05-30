@@ -12,11 +12,13 @@
 
     ~/.gitconfig: gitconfig
 
-    ~/.skhdrc: macos-wm/skhdrc
-    ~/.yabairc: macos-wm/yabairc
+    ~/.condarc: conda/condarc
+
+    ~/.config/i3: config/i3
+    ~/.config/rofi: config/rofi
+
 
     ~/.zshrc: zshrc
-    ~/.spacemacs.d: spacemacs.d
     ~/.fonts: fonts
 
 
@@ -26,5 +28,6 @@
   
 
 - shell:
+  - chsh -s /bin/zsh
   - git submodule sync --recursive
   - git update-submodules 

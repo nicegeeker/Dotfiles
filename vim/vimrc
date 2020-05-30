@@ -58,7 +58,6 @@ let &t_ut=''
 " Prevent auto line split
 set wrap
 set tw=0
-set transparency=10
 
 set indentexpr=
 " Better backspace
