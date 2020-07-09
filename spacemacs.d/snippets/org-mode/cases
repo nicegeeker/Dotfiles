@@ -1,0 +1,12 @@
+# -*- mode: snippet -*-
+# name: equation_cases
+# key: <case
+# --
+\begin{equation}
+   $1 =
+  \begin{cases}
+    $2 & $3,
+\\
+    $4 & $0.
+  \end{cases}
+\end{equation}

@@ -89,7 +89,7 @@ This function should only modify configuration layer settings."
      (spell-checking :variables
                      spell-checking-enable-by-default nil
                      enable-flyspell-auto-completion t
-                     )
+                      )
      (syntax-checking :variables
                       syntax-checking-enable-tooltips t
                       syntax-checking-enable-by-default nil
@@ -656,10 +656,36 @@ you should place your code here."
 \\DeclareGraphicsExtensions{.pdf, .jpeg, .png}
 \\usepackage{amsmath}
 \\usepackage{amssymb}
-\\interdisplaylinepenalty=2500
 \\usepackage{algorithmic}
 \\usepackage{array}
 \\usepackage[caption=false, font=footnotesize]{subfig}
+% page-break permission : 0 :yes  10000:no  other:yes but let latex find someother way
+\\interdisplaylinepenalty=1000
+
+% fix hyperlink to invisible equation number
+\\makeatletter
+\\def\\IEEElabelanchoreqn#1{\\bgroup
+\\def\\@currentlabel{\\p@equation\\theequation}\\relax
+\\def\\@currentHref{\\@IEEEtheHrefequation}\\label{#1}\\relax
+\\Hy@raisedlink{\\hyper@anchorstart{\\@currentHref}}\\relax
+\\Hy@raisedlink{\\hyper@anchorend}\\egroup}
+\\makeatother
+\\newcommand{\\subnumberinglabel}[1]{\\IEEEyesnumber
+  \\IEEEyessubnumber*\\IEEElabelanchoreqn{#1}}
+
+% fix font behavior of IEEEeqnarray
+\\renewcommand{\\theequationdis}{{\\normalfont (\\theequation)}} 
+\\renewcommand{\\theIEEEsubequationdis}{{\\normalfont (\\theIEEEsubequation)}} 
+
+% fix distance between f and ()
+\\usepackage{mleftright}
+\\mleftright
+
+% fix ()paris in different line same size
+\\newcommand{\\sizecorr}[1]{\\makebox[0cm]{\\phantom{$\\displaystyle #1$}}}
+
+% fix d in integration
+\\newcommand{\\dd}{\\mathop{}\\!\\mathrm{d}}
 [NO-DEFAULT-PACKAGES]
 [NO-PACKAGES]
 [EXTRA]"
@@ -675,9 +701,36 @@ you should place your code here."
 \\usepackage{amsmath}
 \\usepackage{amssymb}
 \\usepackage{color}
-\\interdisplaylinepenalty=2500
 \\usepackage{algorithmic}
 \\usepackage{array}
+\\usepackage{cases}
+% page-break permission : 0 :yes  10000:no  other:yes but let latex find someother way
+\\interdisplaylinepenalty=1000
+
+% fix hyperlink to invisible equation number
+\\makeatletter
+\\def\\IEEElabelanchoreqn#1{\\bgroup
+\\def\\@currentlabel{\\p@equation\\theequation}\\relax
+\\def\\@currentHref{\\@IEEEtheHrefequation}\\label{#1}\\relax
+\\Hy@raisedlink{\\hyper@anchorstart{\\@currentHref}}\\relax
+\\Hy@raisedlink{\\hyper@anchorend}\\egroup}
+\\makeatother
+\\newcommand{\\subnumberinglabel}[1]{\\IEEEyesnumber
+  \\IEEEyessubnumber*\\IEEElabelanchoreqn{#1}}
+
+% fix font behavior of IEEEeqnarray
+\\renewcommand{\\theequationdis}{{\\normalfont (\\theequation)}} 
+\\renewcommand{\\theIEEEsubequationdis}{{\\normalfont (\\theIEEEsubequation)}} 
+
+% fix distance between f and ()
+\\usepackage{mleftright}
+\\mleftright
+
+% fix ()paris in different line same size
+\\newcommand{\\sizecorr}[1]{\\makebox[0cm]{\\phantom{$\\displaystyle #1$}}}
+
+% fix d in integration
+\\newcommand{\\dd}{\\mathop{}\\!\\mathrm{d}}
 [NO-DEFAULT-PACKAGES]
 [NO-PACKAGES]
 \\pagestyle{empty}      % do not remove

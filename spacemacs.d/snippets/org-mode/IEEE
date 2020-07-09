@@ -16,11 +16,14 @@
 
 #+BEGIN_EXPORT latex
 \author{
-Yi-qun~Xu,~\IEEEmembership{Member,~IEEE,}
-XXXXX,~\IEEEmembership{Life~Fellow,~IEEE}
-\thanks{M. Shell was with the Department of Electrical and Computer Engineering, Georgia Institute of Technology, Atlanta,GA, 30332 USA e-mail: (see http://www.michaelshell.org/contact.html).}
-\thanks{J. Doe and J. Doe are with Anonymous University.}
-\thanks{Manuscript received April 19, 2005; revised August 26, 2015.}}
+Yi-qun~Xu,
+Daoxing~Guo,%~\IEEEmembership{Member,~IEEE,}
+Bangning~Zhang,%~\IEEEmembership{Life~Fellow,~IEEE}
+
+%\thanks{ \emph{(Corresponding author: Bangning~Zhang.)} }
+%\thanks{J. Doe and J. Doe are with Anonymous University.}
+%\thanks{Manuscript received April 19, 2005; revised August 26, 2015.}
+}
 
 \markboth{}{}
 %\IEEEspecialpapernotice{(Invited Paper)}
@@ -39,14 +42,67 @@ XXXXX,~\IEEEmembership{Life~Fellow,~IEEE}
 
 * Introduction
 @@latex:\IEEEPARstart{}{}@@
+
+
+
 * Section 2
 
-bibliographystyle:IEEEtran
-bibliography:./bibtex/library.bib
-bibliography:./bibtex/IEEEabrv.bib
+* Section 3
 
-#+ATTR_LATEX: :options [{\includegraphics[width=1in,height=1.25in,clip,keepaspectratio]{./author/xuyiqun}}]{Yi-qun Xu}
+
+#+CAPTION: Figure Caption
+#+NAME: fig:XXX
+#+ATTR_LATEX: :placement [!tb] :width 180
+[[]]
+
+
+#+CAPTION: Figure Caption
+#+NAME: fig:XXX
+#+ATTR_LATEX: :placement [!tb] :width 480 :float multicolumn
+[[]]
+
+
+#+CAPTION: Table Caption
+#+NAME: tbl:XXX 
+#+ATTR_LATEX: :align clcccc 
+|-----------+-----------------+------+-------------+-------+------|
+| Scenarios | Sensor Location | MAPE | HDPI  Width |   ICP | CRPS |
+|-----------+-----------------+------+-------------+-------+------|
+| I         | Square Lattice  | 0.58 |        2.89 | 94.8% | 0.41 |
+|           | Randomly        | 0.64 |        3.21 | 95.3% | 0.46 |
+|-----------+-----------------+------+-------------+-------+------|
+| II        | Square Lattice  | 0.83 |        2.94 | 87.8% | 0.63 |
+|           | Randomly        | 0.92 |        3.24 | 88.6% | 0.68 |
+|-----------+-----------------+------+-------------+-------+------|
+
+* End(DELETE THIS LINE)
+
+bibliographystyle:./bibtex/myIEEEtran
+
+bibliography:./bibtex/IEEEabrv.bib,./bibtex/library.bib
+
+
+
+
+
+
+#+ATTR_LATEX: :options [{\includegraphics[width=1in,height=1.25in,clip,keepaspectratio]{./author/Author_Yi-qun_Xu}}]{Yi-qun~Xu}
 #+BEGIN_IEEEbiography
-Yi-qun Xu received the B.S. and M.S. degrees in information and communication engineering from the PLA University of Science and Technology, Nanjing, China, in 2005 and 2010, respectively. He is currently pursuing the Ph.D. degree with Army Engineering University of PLA, Nanjing, China.
-  His current research interests include cognitive radio, spectrum sensing, spatial-temporal data analysis, big data analysis, and machine learning.
+received the B.S. and M.S. degrees in information and communication
+engineering from the PLA University of Science and Technology, Nanjing, China,
+in 2005 and 2010, respectively. He is currently pursuing the Ph.D. degree with
+Army Engineering University of PLA, Nanjing, China.
+
+His current research interests include cognitive radio, spectrum sensing,
+spatial-temporal data analysis, big data analysis, and machine learning.
+#+END_IEEEbiography
+ 
+#+ATTR_LATEX: :options [{\includegraphics[width=1in,height=1.25in,clip,keepaspectratio]{./author/Author_Daoxing_Guo}}]{Daoxing~Guo}
+#+BEGIN_IEEEbiography
+rceived the B.S., M.S., and Ph.D. degrees from the Institute of Communications Engineering, Nanjing, China, in 1995, 1999, and 2002, respectively. His current research interests include satellite communication systems and transmission technologies, communication anti-jamming technologies, and communication anti-interception technologies.
+#+END_IEEEbiography
+
+#+ATTR_LATEX: :options [{\includegraphics[width=1in,height=1.25in,clip,keepaspectratio]{./author/Author_Bangning_Zhang}}]{Bangning~Zhang}
+#+BEGIN_IEEEbiography
+received the B.S. and M.S. degrees from the Institute of Communications Engineering, Nanjing, China, in 1984 and 1987, respectively. His current research interests include microwave technologies, satellite communication systems, communication anti-jamming technologies, and physical layer security.
 #+END_IEEEbiography
