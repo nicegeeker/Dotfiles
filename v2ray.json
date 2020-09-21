@@ -1,4 +1,3 @@
-
 {
 	"inbounds": [{
 		"port": 1080,
@@ -14,11 +13,13 @@
 			"tag":"mydoor",
 			"settings": {
 				"vnext": [{
-					"address": "nicegeek.tk",
+					"address": "nicegeek.xyz",
 					"port": 443,
 					"users": [{
-						"id": "6acb3c59-a02b-4c79-98d9-0cf3785822bb",// ***唯一需要修改的地方*****
-						"alterId": 32
+						"id": "a7c51298-5b55-446c-a490-509e7ad15fe5",// ***唯一需要修改的地方*****
+						"alterId": 32,
+            "security": "auto",
+            "level": 0
 					}]
 				}]
 			},
@@ -28,7 +29,7 @@
 				"wsSettings": {
 					"path": "/my_diary",
 					"headers": {
-						"Host": "nicegeek.tk"
+						"Host": "nicegeek.xyz"
 					}
 				}
 			}
