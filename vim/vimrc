@@ -67,6 +67,17 @@ set pastetoggle=<F2>
 let &t_SI = "\<Esc>]50;CursorShape=1\x7"
 let &t_SR = "\<Esc>]50;CursorShape=2\x7"
 let &t_EI = "\<Esc>]50;CursorShape=0\x7"
+
+if has("autocmd")
+  au VimEnter,InsertLeave * silent execute '!echo -ne "\e[1 q"' | redraw!
+  au InsertEnter,InsertChange *
+    \ if v:insertmode == 'i' | 
+    \   silent execute '!echo -ne "\e[5 q"' | redraw! |
+    \ elseif v:insertmode == 'r' |
+    \   silent execute '!echo -ne "\e[3 q"' | redraw! |
+    \ endif
+  au VimLeave * silent execute '!echo -ne "\e[ q"' | redraw!
+endif
 " ===
 " === Editor behavior
 " ===
@@ -131,7 +142,6 @@ noremap <LEADER><CR> :nohlsearch<CR>
 "          |___/               |_|
 "KeyMaping------------------------{{{
 inoremap jk <esc>
-inoremap <esc> <nop>
 
 nnoremap H 0
 nnoremap L $
@@ -173,8 +183,8 @@ nnoremap <leader>ev :vsplit $MYVIMRC<cr>
 
 "引号
 nnoremap <leader>" viw<esc>a"<esc>hbi"<esc>lel
-nnoremap <leader>' viw<esc>a'<esc>hbi'<esc>lel
-
+nnoremap <leader>' viw<esc>a'<esc>hbi'<esc>"lel
+"
 
 nnoremap <c-u> viwU<esc>
 
@@ -206,13 +216,13 @@ iabbrev adn and
 "| |_) | | | | |/ _` |
 "|  __/| | |_| | (_| |
 "|_|   |_|\__,_|\__, |
-"               |___/
-"Plug----------------------------------------------{{{
+"               |___/"Plug----------------------------------------------{{{
 call plug#begin('~/.vim/plugged')
 " 状态条
 Plug 'vim-airline/vim-airline'
 Plug 'vim-airline/vim-airline-themes'
-let g:airline_theme='base16'
+let g:airline_powerline_fonts = 1
+let g:airline_theme='violet'
 let g:airline_left_sep = ''
 let g:aiuirline_left_alt_sep = ''
 let g:airline_right_sep = ''
@@ -244,6 +254,8 @@ let g:UltiSnipsJumpForwardTrigger = '<tab>'
 let g:UltiSnipsJumpBackwardTrigger = '<s-tab>'
 let g:UltiSnipsSnippetDirectories=["UltiSnips", "MySnippets"]
 
+" fzf plugin
+Plug 'junegunn/fzf', { 'do': { -> fzf#install() } }
 
 " _          _
 "| |    __ _| |_ _____  __
