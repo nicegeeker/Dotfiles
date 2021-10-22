@@ -18,6 +18,7 @@
     ~/.config/awesome: config/awesome
     ~/.config/rofi: config/rofi
     ~/.config/variety: config/variety
+    ~/.config/rclone: config/rclone
 
 
     ~/.zshrc: zsh/zshrc
